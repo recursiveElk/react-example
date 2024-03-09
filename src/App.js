@@ -50,7 +50,7 @@ function App() {
       <ImportokWizard
         title="ImportOK Example for React"
         fields={fields}
-        sample_file="/sample.csv"
+        sampleFile="/sample.csv"
         onRecordReady={saveRecord}
       />
     </div>
