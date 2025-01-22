@@ -2,6 +2,16 @@ import './App.css';
 import ImportokWizard from '@importok/react';
 import React from 'react';
 
+const uploadedFile = new File(
+  [
+    'id,first_name,last_name,email,phone,address,country' + "\n",
+    '1,Jarred,Barton,Ricky.Stroman@gmail.com,605-747-6709,46709 Travon Gateway,EG' + "\n",
+    '2,Ivory,Yundt,Desiree2@gmail.com,459-727-9328 x788,1032 Haley Point,TF' + "\n",
+    '3,Randy,Bruen,Isobel.Wisoky@hotmail.com,364-899-5352,972 Fadel Shores,AI' + "\n",
+  ],
+  'contacts.csv',
+  { type: 'text/csv' }
+);
 
 function App() {
   const fields = {
@@ -52,6 +62,7 @@ function App() {
         fields={fields}
         sampleFile="/sample.csv"
         onRecordReady={saveRecord}
+        uploadedFile={uploadedFile}
       />
     </div>
   );
