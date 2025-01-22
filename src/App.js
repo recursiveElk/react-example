@@ -45,6 +45,7 @@ const demoFields = {
   },
 };
 
+
 function App() {
 
   const [uploadedFile, setUploadedFile] = useState(undefined);
@@ -67,6 +68,7 @@ function App() {
         setUploadedFile(acceptedFiles[0])
       }}/>
       <ImportokWizard
+        key={uploadedFile}
         title="ImportOK Example for React"
         fields={demoFields}
         sampleFile="/sample.csv"

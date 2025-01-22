@@ -19,7 +19,7 @@ export function Dropzone(props) {
 
   useEffect(() => {
     onFileUploaded?.(acceptedFiles)
-  }, [acceptedFiles, onFileAccept])
+  }, [acceptedFiles, onFileUploaded])
 
   return (
     <section className="container">
