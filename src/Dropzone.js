@@ -1,25 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { useEffect , useCallback} from 'react';
 import {useDropzone} from 'react-dropzone';
 import './Dropzone.css'
 
 export function Dropzone(props) {
   const {onFileUploaded} = props;
+  const onDrop = useCallback((acceptedFiles) => {
+    acceptedFiles.forEach((file) => {
+      const reader = new FileReader()
+
+      reader.onabort = () => console.log('file reading was aborted')
+      reader.onerror = () => console.log('file reading has failed')
+      reader.onload = () => {
+      // Do whatever you want with the file contents
+        const binaryStr = reader.result
+        onFileUploaded?.(acceptedFiles[0], binaryStr)
+        console.log('string', binaryStr)
+      }
+      reader.readAsArrayBuffer(file)
+    })
+  }, []);
+
   const {acceptedFiles, getRootProps, getInputProps} = useDropzone({
     accept: {
         'text/csv': ['.csv']
     },
-    maxFiles:2
+    maxFiles:1,
+    onDrop,
   });
-  
-  const files = acceptedFiles.map(file => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-    </li>
-  ));
 
-  useEffect(() => {
-    onFileUploaded?.(acceptedFiles)
-  }, [acceptedFiles, onFileUploaded])
+  
+ 
+  // useEffect(() => {
+  //   onFileUploaded?.(acceptedFiles)
+  // }, [acceptedFiles, onFileUploaded])
 
   return (
     <section className="container">
@@ -27,10 +40,6 @@ export function Dropzone(props) {
         <input {...getInputProps()} />
         <p>Drag 'n' drop some files here, or click to select files</p>
       </div>
-      <aside>
-        <h4>Files</h4>
-        <ul>{files}</ul>
-      </aside>
     </section>
   );
 }

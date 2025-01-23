@@ -1,7 +1,8 @@
 import './App.css';
 import ImportokWizard from '@importok/react';
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 import {Dropzone} from './Dropzone'
+import {read, utils} from 'xlsx';
 
 // const demoUploadedFile = new File(
 //   [
@@ -49,6 +50,7 @@ const demoFields = {
 function App() {
 
   const [uploadedFile, setUploadedFile] = useState(undefined);
+  const [stream, setStream] = useState(undefined);
 
   const saveRecord = async function (record, meta) {
     // Fake a network request and throw an error randomly
@@ -61,12 +63,36 @@ function App() {
   };
   console.log('uploadedFile', uploadedFile)
 
+  const outputStream = useMemo(() => {
+    if (stream) {
+      var wb2 = read(stream, {type:"binary"});
+      console.log('wb2',wb2)
+      var js = utils.sheet_to_json(wb2.Sheets.Sheet1, {header:1, raw:true});
+      return js
+    }
+    return undefined
+  }, [stream])
+  const cols = outputStream?.[0];
+  console.log('outputStream', outputStream)
+  const fields = cols?.reduce((acc, col) => {
+    if (acc[col] === undefined) {
+      acc[col.replaceAll(" ", "_").toLowerCase()] = col
+    }
+    return acc
+  }, {})
+  console.log('fields', fields)
+
   return (
     <div className="App">
-      <Dropzone onFileUploaded={(acceptedFiles) => {
-        console.log('acceptedFiles', acceptedFiles)
-        setUploadedFile(acceptedFiles[0])
+      <Dropzone onFileUploaded={(file, stream) => {
+        console.log('acceptedFiles', file, stream)
+        setUploadedFile(file)
+        setStream(stream)
       }}/>
+      <div><strong>cols</strong>: {cols?.toString()}</div>
+      <br/><br/>
+      <div><strong>fields</strong>: {JSON.stringify(fields)}</div>
+      <br/><br/>
       <ImportokWizard
         key={uploadedFile}
         title="ImportOK Example for React"
