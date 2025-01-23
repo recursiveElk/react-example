@@ -76,7 +76,7 @@ function App() {
   console.log('outputStream', outputStream)
   const fields = cols?.reduce((acc, col) => {
     if (acc[col] === undefined) {
-      acc[col.replaceAll(" ", "_").toLowerCase()] = col
+      acc[col.replaceAll(" ", "_").toLowerCase()] = {label: col}
     }
     return acc
   }, {})
@@ -96,7 +96,7 @@ function App() {
       <ImportokWizard
         key={uploadedFile}
         title="ImportOK Example for React"
-        fields={demoFields}
+        fields={fields}
         sampleFile="/sample.csv"
         onRecordReady={saveRecord}
         uploadedFile={uploadedFile}
